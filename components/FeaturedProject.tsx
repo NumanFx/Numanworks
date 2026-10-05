@@ -1,15 +1,19 @@
 import React from 'react';
 import { featuredProjectImages } from '../constants';
-import AutoPlayVideoCard from './AutoPlayVideoCard';
+import InlineVideoCard from './InlineVideoCard';
+import { cleanMediaUrl } from '../utils/video';
 
 const FeaturedProject: React.FC = () => {
-  const staticImage = featuredProjectImages.find(img => !img.isVideo);
-  const videoImages = featuredProjectImages.filter(img => img.isVideo);
+  const staticImage = featuredProjectImages.find((img) => !img.isVideo);
+  const videoImages = featuredProjectImages.filter((img) => img.isVideo && img.videoUrl);
 
   return (
-    <section className="relative p-8 rounded-3xl bg-gradient-to-br from-gray-100 to-blue-50 dark:from-[#0a2033] dark:to-black overflow-hidden">
+    <section className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-gray-100 to-blue-50 dark:from-[#0a2033] dark:to-black overflow-hidden border border-black/5 dark:border-white/10 shadow-2xl">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
         <div className="lg:col-span-2 space-y-6 scroll-animate">
+          <div className="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 font-semibold text-xs tracking-wider uppercase">
+            Spotlight
+          </div>
           <h2 className="text-4xl lg:text-5xl font-bold">
             Featured Project:<br />Kangana Ranaut Event
           </h2>
@@ -37,10 +41,10 @@ const FeaturedProject: React.FC = () => {
 
         <div className="lg:col-span-3 space-y-6 scroll-animate" style={{ transitionDelay: '200ms' }}>
           {staticImage && (
-            <div className="rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+            <div className="rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10 bg-neutral-900">
               <img
-                src={staticImage.src.replace(/^#/, '')}
-                alt={`Featured project image ${staticImage.id}`}
+                src={cleanMediaUrl(staticImage.src)}
+                alt={`Featured project visual ${staticImage.id}`}
                 className="w-full h-auto object-cover"
                 loading="lazy"
                 decoding="async"
@@ -48,15 +52,18 @@ const FeaturedProject: React.FC = () => {
             </div>
           )}
 
+          {/* Videos play automatically inline without opening a popup, showing thumbnail for 1st 1-3 sec */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {videoImages.map((image) => (
-              <AutoPlayVideoCard
+            {videoImages.map((image, idx) => (
+              <InlineVideoCard
                 key={image.id}
-                videoUrl={image.videoUrl || ''}
-                thumbnail={image.src}
+                id={image.id}
+                thumbnail={cleanMediaUrl(image.src)}
+                videoUrl={image.videoUrl!}
                 title={`Kangana Ranaut Event Clip ${image.id}`}
                 aspectRatioClass="aspect-video"
-                delayMs={2000}
+                previewDurationMs={2000}
+                index={idx}
               />
             ))}
           </div>

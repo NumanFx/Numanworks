@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
 
-type Page = 'portfolio' | 'creatorVault';
+type Page = 'portfolio' | 'aiCreativeSuite';
 
 interface NavbarProps {
   currentPage: Page;
@@ -19,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, setCurrentPage, theme, onT
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-white/50 dark:bg-black/50 backdrop-blur-md border-b border-black/5 dark:border-white/5 animate-fade-in-down">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white/70 dark:bg-black/70 backdrop-blur-md border-b border-black/5 dark:border-white/5">
       <nav className="container mx-auto px-6 md:px-12 lg:px-24 flex justify-between items-center h-16">
         <div 
           className="text-2xl font-bold tracking-wider cursor-pointer z-50"
@@ -28,13 +28,13 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, setCurrentPage, theme, onT
           N<span className="text-orange-500">.</span>
         </div>
         
-        <div className="flex items-center space-x-4 md:space-x-6">
+        <div className="flex items-center space-x-6 md:space-x-8">
           {/* Desktop Menu */}
-          <ul className="hidden md:flex items-center space-x-6">
+          <ul className="hidden md:flex items-center space-x-8">
             <li>
               <button
                 onClick={() => handleNavClick('portfolio')}
-                className={`text-lg font-medium transition-colors duration-300 ${
+                className={`text-base font-medium transition-colors duration-200 ${
                   currentPage === 'portfolio'
                     ? 'text-orange-500 dark:text-orange-400'
                     : 'text-gray-600 dark:text-white/70 hover:text-orange-500 dark:hover:text-orange-400'
@@ -45,14 +45,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, setCurrentPage, theme, onT
             </li>
             <li>
               <button
-                onClick={() => handleNavClick('creatorVault')}
-                className={`text-lg font-medium transition-colors duration-300 ${
-                  currentPage === 'creatorVault'
+                onClick={() => handleNavClick('aiCreativeSuite')}
+                className={`text-base font-medium transition-colors duration-200 ${
+                  currentPage === 'aiCreativeSuite'
                     ? 'text-orange-500 dark:text-orange-400'
                     : 'text-gray-600 dark:text-white/70 hover:text-orange-500 dark:hover:text-orange-400'
                 }`}
               >
-                Creator Vault
+                AI Tools
               </button>
             </li>
           </ul>
@@ -63,7 +63,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, setCurrentPage, theme, onT
           <div className="md:hidden z-50">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-800 dark:text-white focus:outline-none"
+              className="text-gray-800 dark:text-white focus:outline-none p-1"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
@@ -82,11 +82,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, setCurrentPage, theme, onT
 
       {/* Mobile Menu Dropdown */}
       <div className={`transition-all duration-300 ease-in-out md:hidden overflow-hidden ${isMenuOpen ? 'max-h-60' : 'max-h-0'}`}>
-        <ul className="bg-white/90 dark:bg-black/90 backdrop-blur-lg flex flex-col items-center space-y-2 py-4 border-t border-black/10 dark:border-white/10">
+        <ul className="bg-white/95 dark:bg-black/95 backdrop-blur-lg flex flex-col items-center space-y-3 py-5 border-t border-black/10 dark:border-white/10">
           <li>
             <button
               onClick={() => handleNavClick('portfolio')}
-              className={`w-full text-center py-2 px-4 text-lg font-medium transition-colors duration-300 ${
+              className={`w-full text-center py-2 px-4 text-base font-medium transition-colors duration-200 ${
                 currentPage === 'portfolio'
                   ? 'text-orange-500 dark:text-orange-400'
                   : 'text-gray-600 dark:text-white/70 hover:text-orange-500 dark:hover:text-orange-400'
@@ -97,14 +97,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, setCurrentPage, theme, onT
           </li>
           <li>
             <button
-              onClick={() => handleNavClick('creatorVault')}
-              className={`w-full text-center py-2 px-4 text-lg font-medium transition-colors duration-300 ${
-                currentPage === 'creatorVault'
+              onClick={() => handleNavClick('aiCreativeSuite')}
+              className={`w-full text-center py-2 px-4 text-base font-medium transition-colors duration-200 ${
+                currentPage === 'aiCreativeSuite'
                   ? 'text-orange-500 dark:text-orange-400'
                   : 'text-gray-600 dark:text-white/70 hover:text-orange-500 dark:hover:text-orange-400'
               }`}
             >
-              Creator Vault
+              AI Tools
             </button>
           </li>
         </ul>

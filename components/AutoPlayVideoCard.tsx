@@ -51,7 +51,6 @@ const AutoPlayVideoCard: React.FC<AutoPlayVideoCardProps> = ({
           if (entry.isIntersecting) {
             setIsInView(true);
           } else {
-            // Unload iframe when scrolled away to save bandwidth & CPU
             setIsInView(false);
             setIsPlaying(false);
             setIframeLoaded(false);
@@ -71,8 +70,7 @@ const AutoPlayVideoCard: React.FC<AutoPlayVideoCardProps> = ({
     };
   }, [eager]);
 
-  // CRITICAL: ONLY start countdown AFTER thumbnail is fully loaded and visible on screen!
-  // This guarantees the video CANNOT play until the user has seen the thumbnail for the full delay.
+  // Autoplay after thumbnail has been visibly loaded and displayed for delayMs
   useEffect(() => {
     if (!isInView || isPlaying || !thumbLoaded) return;
 
@@ -83,7 +81,6 @@ const AutoPlayVideoCard: React.FC<AutoPlayVideoCardProps> = ({
     return () => clearTimeout(timer);
   }, [isInView, isPlaying, thumbLoaded, delayMs]);
 
-  // Fast manual immediate play on click
   const handleCardClick = () => {
     if (!isPlaying) {
       setIsPlaying(true);
@@ -94,66 +91,39 @@ const AutoPlayVideoCard: React.FC<AutoPlayVideoCardProps> = ({
     <div
       ref={containerRef}
       onClick={handleCardClick}
-      className={`group relative overflow-hidden rounded-2xl bg-neutral-900 shadow-lg border border-black/10 dark:border-white/10 ${aspectRatioClass} ${className} cursor-pointer will-change-transform`}
+      className={`group relative overflow-hidden rounded-xl bg-neutral-900 border border-black/10 dark:border-white/10 ${aspectRatioClass} ${className} cursor-pointer`}
     >
-      {/* 1. Base Thumbnail: Shown first. Timer ONLY runs after this loads */}
+      {/* 1. Base Thumbnail */}
       {currentThumb && (
         <img
           src={currentThumb}
           alt={title || 'Video thumbnail'}
-          onLoad={() => {
-            setThumbLoaded(true);
-          }}
+          onLoad={() => setThumbLoaded(true)}
           onError={() => {
             if (fallbackThumb && currentThumb !== fallbackThumb) {
               setCurrentThumb(fallbackThumb);
             }
           }}
           decoding="async"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-out z-10 ${
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out z-10 ${
             thumbLoaded ? 'opacity-100' : 'opacity-0'
           } ${isPlaying && iframeLoaded ? 'opacity-0 pointer-events-none' : ''}`}
           loading={eager ? 'eager' : 'lazy'}
         />
       )}
 
-      {/* Loading Skeleton while thumbnail loads */}
-      {!thumbLoaded && (
-        <div className="absolute inset-0 bg-neutral-800 animate-pulse flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-orange-500 animate-spin" />
-        </div>
-      )}
-
-      {/* Visual countdown overlay: Active only while thumbnail is visible */}
+      {/* Clean minimal play button on thumbnail hover before play */}
       {(!isPlaying || !iframeLoaded) && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-between p-4 pointer-events-none">
-          <div className="self-end bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-medium text-white/90 flex items-center gap-1.5 shadow-sm">
-            <span className={`w-1.5 h-1.5 rounded-full ${thumbLoaded ? 'bg-orange-400 animate-ping' : 'bg-gray-400'}`}></span>
-            <span>{thumbLoaded ? 'Auto-plays in 2s' : 'Loading...'}</span>
-          </div>
-
-          <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300 shadow-xl">
-            <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none transition-opacity duration-300">
+          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200">
+            <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
             </svg>
           </div>
-
-          {/* Progress bar: ONLY fills once thumbnail is loaded */}
-          <div className="w-full bg-white/20 h-1.5 rounded-full overflow-hidden">
-            <div
-              className={`h-full bg-gradient-to-r from-orange-500 to-amber-400 rounded-full ${
-                isInView && thumbLoaded ? 'transition-all ease-linear' : 'w-0'
-              }`}
-              style={{
-                width: isInView && thumbLoaded ? '100%' : '0%',
-                transitionDuration: `${delayMs}ms`,
-              }}
-            />
-          </div>
         </div>
       )}
 
-      {/* 2. Embedded Inline Video Player: Mounts and transitions in ONLY after thumbnail is shown for delayMs */}
+      {/* 2. Inline Muted Video Player */}
       {isInView && thumbLoaded && isPlaying && (
         <iframe
           src={getEmbedUrl(videoUrl, true, true)}
@@ -168,10 +138,10 @@ const AutoPlayVideoCard: React.FC<AutoPlayVideoCardProps> = ({
         />
       )}
 
-      {/* Title banner */}
+      {/* Clean title banner */}
       {title && (
-        <div className="pointer-events-none absolute bottom-0 left-0 p-3 bg-gradient-to-t from-black/85 via-black/40 to-transparent w-full z-30">
-          <h3 className="text-sm md:text-base font-semibold text-white drop-shadow">{title}</h3>
+        <div className="pointer-events-none absolute bottom-0 left-0 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent w-full z-30">
+          <h3 className="text-sm font-medium text-white drop-shadow-sm">{title}</h3>
         </div>
       )}
     </div>

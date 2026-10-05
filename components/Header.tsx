@@ -1,9 +1,9 @@
 import React from 'react';
-import AutoPlayVideoCard from './AutoPlayVideoCard';
+import InlineVideoCard from './InlineVideoCard';
 
 const Header: React.FC = () => {
   const videoUrl = 'https://vimeo.com/1136264632';
-  const thumbnailUrl = '/thumbnails/header.png';
+  const thumbnailUrl = 'https://i.ibb.co/ymWVhWCx/Untitled-design.png';
 
   return (
     <section className="min-h-[60vh] flex items-center">
@@ -12,10 +12,16 @@ const Header: React.FC = () => {
           <h1 className="text-5xl lg:text-7xl font-bold leading-tight scroll-animate">
             I'm Numan
           </h1>
-          <h2 className="text-2xl lg:text-3xl font-medium text-gray-600 dark:text-white/80 scroll-animate" style={{ transitionDelay: '150ms' }}>
+          <h2
+            className="text-2xl lg:text-3xl font-medium text-gray-600 dark:text-white/80 scroll-animate"
+            style={{ transitionDelay: '150ms' }}
+          >
             A Video Editor & Motion Designer with 3+ years of experience.
           </h2>
-          <p className="text-lg text-gray-500 dark:text-white/60 scroll-animate" style={{ transitionDelay: '300ms' }}>
+          <p
+            className="text-lg text-gray-500 dark:text-white/60 scroll-animate max-w-xl"
+            style={{ transitionDelay: '300ms' }}
+          >
             From snappy edits to smooth motion graphics, I craft visuals that speak louder than words. Whether it's a reel, ad, or explainer, I turn ideas into eye-catching content that moves minds.
           </p>
         </div>
@@ -24,27 +30,25 @@ const Header: React.FC = () => {
           <style>
             {`
               @keyframes float {
-                  0% { transform: translateY(0px); }
-                  50% { transform: translateY(-10px); }
-                  100% { transform: translateY(0px); }
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+                100% { transform: translateY(0px); }
               }
               .animate-float {
-                  animation: float 6s ease-in-out infinite;
+                animation: float 6s ease-in-out infinite;
               }
             `}
           </style>
 
-          {/* Hero Video Card - Shows thumbnail for 2s, then autoplays inline without popup */}
-          <div className="relative group w-56 sm:w-64 aspect-[9/16] rounded-3xl p-1 bg-gradient-to-tr from-cyan-500/40 via-blue-500/30 to-purple-500/40 shadow-2xl z-10 animate-float backdrop-blur-md">
-            <AutoPlayVideoCard
-              videoUrl={videoUrl}
+          {/* Hero Reel: plays automatically inline without opening a popup */}
+          <div className="w-52 md:w-60 shadow-2xl z-10 animate-float">
+            <InlineVideoCard
               thumbnail={thumbnailUrl}
+              videoUrl={videoUrl}
+              title="Showreel"
               aspectRatioClass="aspect-[9/16]"
-              delayMs={2000}
-              eager={true}
-              className="w-full h-full rounded-[22px]"
+              previewDurationMs={2000} // 2 seconds thumbnail display, then auto-plays inline!
             />
-            <div className="absolute inset-0 rounded-3xl pointer-events-none ring-1 ring-inset ring-white/20"></div>
           </div>
         </div>
       </div>

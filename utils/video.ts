@@ -1,35 +1,73 @@
-export const getEmbedUrl = (url?: string, autoplay: boolean = true, muted: boolean = true): string => {
+/**
+ * Clean any accidental hash symbols or whitespace from media URLs
+ */
+export const cleanMediaUrl = (url?: string | null): string => {
   if (!url) return '';
-  const autoParam = autoplay ? '1' : '0';
-  const muteParam = muted ? '1' : '0';
-
-  // Vimeo ID extraction (handles vimeo.com/123, player.vimeo.com/video/123, query parameters, etc.)
-  const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  if (vimeoMatch && vimeoMatch[1]) {
-    const videoId = vimeoMatch[1];
-    // dnt=1 stops third-party trackers for 2x faster iframe load & reduced JS overhead
-    return `https://player.vimeo.com/video/${videoId}?autoplay=${autoParam}&muted=${muteParam}&loop=1&autopause=0&playsinline=1&controls=1&dnt=1&title=0&byline=0&portrait=0&transparent=0`;
-  }
-
-  // YouTube ID extraction
-  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-  if (ytMatch && ytMatch[1]) {
-    const videoId = ytMatch[1];
-    return `https://www.youtube.com/embed/${videoId}?autoplay=${autoParam}&mute=${muteParam}&loop=1&playlist=${videoId}&playsinline=1&rel=0&controls=1`;
-  }
-
-  return url;
+  return url.trim().replace(/^#+/, '');
 };
 
-export const getVimeoThumbnailUrl = (url?: string): string => {
-  if (!url) return '';
-  const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  if (vimeoMatch && vimeoMatch[1]) {
-    return `https://vumbnail.com/${vimeoMatch[1]}.jpg`;
-  }
-  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-  if (ytMatch && ytMatch[1]) {
-    return `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+/**
+ * Extract Vimeo video ID from various URL formats:
+ * - https://player.vimeo.com/video/1136231248
+ * - https://vimeo.com/1136777764?fl=tl&fe=ec
+ * - https://vimeo.com/1136253618?share=copy&fl=sv&fe=ci
+ */
+export const extractVimeoId = (url?: string | null): string | null => {
+  if (!url) return null;
+  const clean = cleanMediaUrl(url);
+  const match = clean.match(/(?:vimeo\.com\/(?:video\/)?|player\.vimeo\.com\/video\/)(\d+)/);
+  return match ? match[1] : null;
+};
+
+/**
+ * Returns a fallback thumbnail URL from Vimeo CDN / vumbnail service
+ * in case the primary image hosting fails.
+ */
+export const getFallbackThumbnail = (url?: string | null): string => {
+  const videoId = extractVimeoId(url);
+  if (videoId) {
+    return `https://vumbnail.com/${videoId}.jpg`;
   }
   return '';
+};
+
+/**
+ * Generate an optimized Vimeo embed URL with inline autoplay, muted by default for browser compliance,
+ * loop enabled, and dnt (Do Not Track) enabled for faster loading.
+ */
+export const getVimeoEmbedUrl = (
+  videoUrl?: string | null,
+  options: {
+    autoplay?: boolean;
+    muted?: boolean;
+    loop?: boolean;
+    controls?: boolean;
+  } = {}
+): string => {
+  if (!videoUrl) return '';
+  const videoId = extractVimeoId(videoUrl);
+  if (!videoId) return cleanMediaUrl(videoUrl);
+
+  const {
+    autoplay = true,
+    muted = true,
+    loop = true,
+    controls = true,
+  } = options;
+
+  const params = new URLSearchParams({
+    autoplay: autoplay ? '1' : '0',
+    muted: muted ? '1' : '0',
+    loop: loop ? '1' : '0',
+    autopause: '0',
+    playsinline: '1',
+    title: '0',
+    byline: '0',
+    portrait: '0',
+    dnt: '1', // Prevents tracking scripts, speeds up load time significantly
+    transparent: '0',
+    controls: controls ? '1' : '0',
+  });
+
+  return `https://player.vimeo.com/video/${videoId}?${params.toString()}`;
 };
