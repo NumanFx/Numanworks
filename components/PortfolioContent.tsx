@@ -19,7 +19,8 @@ const PortfolioContent: React.FC = () => {
         });
       },
       {
-        threshold: 0.1,
+        threshold: 0.05,
+        rootMargin: '80px 0px 80px 0px',
       }
     );
 

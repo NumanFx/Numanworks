@@ -1,34 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { featuredProjectImages } from '../constants';
+import AutoPlayVideoCard from './AutoPlayVideoCard';
 
 const FeaturedProject: React.FC = () => {
-  const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setPlayingVideoUrl(null);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
-
-  const getEmbedUrl = (url: string | null): string => {
-    if (!url) return '';
-    if (url.includes('youtube.com')) {
-      return `${url}?autoplay=1&rel=0`;
-    }
-    if (url.includes('vimeo.com')) {
-      const videoId = url.split('/').pop()?.split('?')[0];
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
-    }
-    return `${url}?autoplay=1`;
-  };
-
-
   const staticImage = featuredProjectImages.find(img => !img.isVideo);
   const videoImages = featuredProjectImages.filter(img => img.isVideo);
 
@@ -60,69 +34,34 @@ const FeaturedProject: React.FC = () => {
             </li>
           </ul>
         </div>
+
         <div className="lg:col-span-3 space-y-6 scroll-animate" style={{ transitionDelay: '200ms' }}>
           {staticImage && (
             <div className="rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
               <img
-                src={staticImage.src}
+                src={staticImage.src.replace(/^#/, '')}
                 alt={`Featured project image ${staticImage.id}`}
                 className="w-full h-auto object-cover"
                 loading="lazy"
+                decoding="async"
               />
             </div>
           )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {videoImages.map((image) => (
-              <div 
-                key={image.id} 
-                className="group relative overflow-hidden rounded-2xl cursor-pointer aspect-video"
-                onClick={() => image.videoUrl && setPlayingVideoUrl(image.videoUrl)}
-              >
-                <img
-                  src={image.src}
-                  alt={`Featured project video ${image.id}`}
-                  className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-colors duration-300 group-hover:bg-black/10">
-                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm transform group-hover:scale-110 transition-transform duration-300">
-                        <svg className="w-7 h-7 md:w-8 md:h-8 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                        </svg>
-                    </div>
-                </div>
-              </div>
+              <AutoPlayVideoCard
+                key={image.id}
+                videoUrl={image.videoUrl || ''}
+                thumbnail={image.src}
+                title={`Kangana Ranaut Event Clip ${image.id}`}
+                aspectRatioClass="aspect-video"
+                delayMs={2000}
+              />
             ))}
           </div>
         </div>
       </div>
-       {playingVideoUrl && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-          onClick={() => setPlayingVideoUrl(null)}
-        >
-          <div
-            className="relative w-full max-w-4xl aspect-video bg-black rounded-lg overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setPlayingVideoUrl(null)}
-              className="absolute -top-2 -right-2 text-white bg-black rounded-full h-8 w-8 flex items-center justify-center text-2xl z-20 leading-none"
-              aria-label="Close video player"
-            >
-              &times;
-            </button>
-            <iframe
-              src={getEmbedUrl(playingVideoUrl)}
-              title="Video Player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
