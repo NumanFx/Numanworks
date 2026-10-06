@@ -22,12 +22,15 @@ export const InlineVideoCard: React.FC<InlineVideoCardProps> = ({
   className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isInView, setIsInView] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
   const [imgSrc, setImgSrc] = useState<string>(() => cleanMediaUrl(thumbnail));
   const [isImgLoaded, setIsImgLoaded] = useState(false);
+
+  const isDirectVideo = (url: string) => /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url);
 
   // Sync image source if thumbnail prop changes
   useEffect(() => {
@@ -50,6 +53,9 @@ export const InlineVideoCard: React.FC<InlineVideoCardProps> = ({
             setIsInView(false);
             setIsPlaying(false);
             setProgress(0);
+            if (videoRef.current) {
+              videoRef.current.pause();
+            }
           }
         });
       },
@@ -84,6 +90,14 @@ export const InlineVideoCard: React.FC<InlineVideoCardProps> = ({
     return () => clearInterval(interval);
   }, [isInView, isPlaying, previewDurationMs]);
 
+  // Ensure direct video element plays when isPlaying turns true
+  useEffect(() => {
+    if (isPlaying && videoRef.current) {
+      videoRef.current.muted = isMuted;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [isPlaying, isMuted]);
+
   const handleStartPlayingImmediately = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsPlaying(true);
@@ -91,7 +105,13 @@ export const InlineVideoCard: React.FC<InlineVideoCardProps> = ({
 
   const handleToggleMute = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsMuted((prev) => !prev);
+    setIsMuted((prev) => {
+      const next = !prev;
+      if (videoRef.current) {
+        videoRef.current.muted = next;
+      }
+      return next;
+    });
   };
 
   const handleToggleFullscreen = (e: React.MouseEvent) => {
@@ -147,15 +167,27 @@ export const InlineVideoCard: React.FC<InlineVideoCardProps> = ({
       {/* Inline Video Player: mounted & plays automatically without opening a popup */}
       {isPlaying && (
         <div className="absolute inset-0 w-full h-full z-10 bg-black animate-fade-in">
-          <iframe
-            key={`${videoUrl}-${isMuted ? 'muted' : 'unmuted'}`}
-            src={embedUrl}
-            title={title || 'Video Player'}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="w-full h-full"
-          ></iframe>
+          {isDirectVideo(videoUrl) ? (
+            <video
+              ref={videoRef}
+              src={cleanMediaUrl(videoUrl)}
+              autoPlay
+              muted={isMuted}
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <iframe
+              key={`${videoUrl}-${isMuted ? 'muted' : 'unmuted'}`}
+              src={embedUrl}
+              title={title || 'Video Player'}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          )}
         </div>
       )}
 

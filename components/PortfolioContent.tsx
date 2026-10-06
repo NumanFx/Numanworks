@@ -19,8 +19,7 @@ const PortfolioContent: React.FC = () => {
         });
       },
       {
-        threshold: 0.05,
-        rootMargin: '80px 0px 80px 0px',
+        threshold: 0.1,
       }
     );
 
@@ -34,14 +33,30 @@ const PortfolioContent: React.FC = () => {
 
   return (
     <main className="container mx-auto px-6 md:px-12 lg:px-24 space-y-24 md:space-y-36 py-12 md:py-24">
-      <Header />
-      <Expertise />
-      <Tools />
-      <PortfolioGrid title="Short-Form Videos" items={shortFormVideos} />
-      <FeaturedProject />
-      <PortfolioGrid title="Long-Form Videos" items={longFormVideos} />
-      <PortfolioGrid title="Graphic Design" items={graphicDesigns} isGraphicDesign={true} />
-      <Contact />
+      <div id="home">
+        <Header />
+      </div>
+      <div id="expertise">
+        <Expertise />
+      </div>
+      <div id="tools">
+        <Tools />
+      </div>
+      <div id="short-form">
+        <PortfolioGrid title="Short-Form Videos" items={shortFormVideos} />
+      </div>
+      <div id="featured">
+        <FeaturedProject />
+      </div>
+      <div id="long-form">
+        <PortfolioGrid title="Long-Form Videos" items={longFormVideos} />
+      </div>
+      <div id="graphic-design">
+        <PortfolioGrid title="Graphic Design" items={graphicDesigns} isGraphicDesign={true} />
+      </div>
+      <div id="contact">
+        <Contact />
+      </div>
     </main>
   );
 };

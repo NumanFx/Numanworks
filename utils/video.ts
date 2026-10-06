@@ -31,6 +31,8 @@ export const getFallbackThumbnail = (url?: string | null): string => {
   return '';
 };
 
+export const getVimeoThumbnailUrl = getFallbackThumbnail;
+
 /**
  * Generate an optimized Vimeo embed URL with inline autoplay, muted by default for browser compliance,
  * loop enabled, and dnt (Do Not Track) enabled for faster loading.
@@ -70,4 +72,8 @@ export const getVimeoEmbedUrl = (
   });
 
   return `https://player.vimeo.com/video/${videoId}?${params.toString()}`;
+};
+
+export const getEmbedUrl = (videoUrl?: string | null, autoplay = true, muted = true): string => {
+  return getVimeoEmbedUrl(videoUrl, { autoplay, muted });
 };

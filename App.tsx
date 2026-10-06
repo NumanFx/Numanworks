@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import PortfolioContent from './components/PortfolioContent';
-import AiCreativeSuite from './components/AiCreativeSuite';
-import AiImageGenerator from './components/AiImageGenerator';
-import AiImageEditor from './components/AiImageEditor';
-
-type Page = 'portfolio' | 'aiGenerator' | 'aiEditor' | 'aiSuite';
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-  const [currentPage, setCurrentPage] = useState<Page>('portfolio');
-  const [glowProps, setGlowProps] = useState<{x: number; y: number; key: number} | null>(null);
+  const [glowProps, setGlowProps] = useState<{ x: number; y: number; key: number } | null>(null);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -19,7 +13,7 @@ const App: React.FC = () => {
   }, [theme]);
 
   const handleThemeToggle = (event: React.MouseEvent) => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
     setGlowProps({
       x: event.clientX,
       y: event.clientY,
@@ -41,17 +35,14 @@ const App: React.FC = () => {
           }
         />
       )}
-      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} theme={theme} onToggle={handleThemeToggle} />
-      
+      <Navbar theme={theme} onToggle={handleThemeToggle} />
+
       {/* Background Gradient Orbs */}
-      <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 dark:from-cyan-500/50 dark:to-blue-500/50 rounded-full filter blur-3xl opacity-50 dark:opacity-20 animate-orb-1"></div>
-      <div className="absolute bottom-0 -right-1/4 w-1/2 h-1/2 bg-gradient-to-l from-orange-500/30 to-yellow-500/30 dark:from-orange-500/50 dark:to-yellow-500/50 rounded-full filter blur-3xl opacity-50 dark:opacity-20 animate-orb-2"></div>
+      <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 dark:from-cyan-500/50 dark:to-blue-500/50 rounded-full filter blur-3xl opacity-50 dark:opacity-20 animate-orb-1 pointer-events-none"></div>
+      <div className="absolute bottom-0 -right-1/4 w-1/2 h-1/2 bg-gradient-to-l from-orange-500/30 to-yellow-500/30 dark:from-orange-500/50 dark:to-yellow-500/50 rounded-full filter blur-3xl opacity-50 dark:opacity-20 animate-orb-2 pointer-events-none"></div>
 
       <div className="relative z-10 pt-20">
-        {currentPage === 'portfolio' && <PortfolioContent />}
-        {currentPage === 'aiGenerator' && <AiImageGenerator />}
-        {currentPage === 'aiEditor' && <AiImageEditor />}
-        {currentPage === 'aiSuite' && <AiCreativeSuite />}
+        <PortfolioContent />
       </div>
     </div>
   );

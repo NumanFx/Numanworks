@@ -2,7 +2,7 @@ import React from 'react';
 import InlineVideoCard from './InlineVideoCard';
 
 const Header: React.FC = () => {
-  const videoUrl = 'https://vimeo.com/1136264632';
+  const videoUrl = 'https://vjs.zencdn.net/v/oceans.mp4';
   const thumbnailUrl = 'https://i.ibb.co/ymWVhWCx/Untitled-design.png';
 
   return (

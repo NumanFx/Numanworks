@@ -3,30 +3,38 @@ import GlassmorphicCard from './GlassmorphicCard';
 import { AfterEffectsIcon, PremiereProIcon, IllustratorIcon, CapCutIcon, CanvaIcon } from './Icons';
 
 const tools = [
-  { name: 'After Effects', icon: <AfterEffectsIcon /> },
-  { name: 'Premiere Pro', icon: <PremiereProIcon /> },
-  { name: 'Illustrator', icon: <IllustratorIcon /> },
-  { name: 'CapCut', icon: <CapCutIcon /> },
-  { name: 'Canva', icon: <CanvaIcon /> },
+  { name: 'AFTER EFFECTS', icon: <AfterEffectsIcon /> },
+  { name: 'PREMIERE PRO', icon: <PremiereProIcon /> },
+  { name: 'ILLUSTRATOR', icon: <IllustratorIcon /> },
+  { name: 'CAPCUT', icon: <CapCutIcon /> },
+  { name: 'CANVA', icon: <CanvaIcon /> },
 ];
 
 const Tools: React.FC = () => {
   return (
-    <section id="tools" className="py-12">
-      <h2 className="text-3xl font-bold mb-8 text-center scroll-animate">Tools I Use</h2>
-      <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
-        {tools.map((tool, index) => (
-          <GlassmorphicCard
-            key={tool.name}
-            className="flex flex-col items-center justify-center p-6 w-32 h-32 sm:w-36 sm:h-36 scroll-animate hover:scale-105 transition-transform duration-300"
-            style={{ transitionDelay: `${index * 100}ms` }}
-          >
-            <div className="w-12 h-12 mb-3 flex items-center justify-center">
-              {tool.icon}
-            </div>
-            <span className="text-sm font-medium text-center">{tool.name}</span>
-          </GlassmorphicCard>
-        ))}
+    <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+      <div className="md:col-span-1 text-center md:text-left scroll-animate">
+        <h2 className="text-4xl lg:text-5xl font-bold">
+          Editing &<br />Creative<br />Tools:
+        </h2>
+      </div>
+      <div className="md:col-span-2 scroll-animate" style={{ transitionDelay: '150ms' }}>
+        <GlassmorphicCard>
+          <div className="space-y-6">
+            {tools.map((tool, index) => (
+              <div
+                key={tool.name}
+                className="flex items-center space-x-4 scroll-animate"
+                style={{ transitionDelay: `${100 * index}ms` }}
+              >
+                {tool.icon}
+                <span className="text-xl font-semibold tracking-wider text-gray-700 dark:text-white/90">
+                  {tool.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </GlassmorphicCard>
       </div>
     </section>
   );

@@ -5,12 +5,12 @@ export const expertiseData = [
 ];
 
 export const shortFormVideos = [
-    { id: 1, thumbnail: 'https://i.ibb.co/sdv4sS0S/1.png', videoUrl: 'https://player.vimeo.com/video/1136231248' },
-    { id: 2, thumbnail: 'https://i.ibb.co/d4FFTtZM/2.png', videoUrl: 'https://player.vimeo.com/video/1136232227' },
-    { id: 3, thumbnail: 'https://i.ibb.co/Kz8xnymd/3.png', videoUrl: 'https://player.vimeo.com/video/1136232363' },
-    { id: 4, thumbnail: 'https://i.ibb.co/4xwrCCJ/Screenshot-2025-11-14-at-10-54-41-AM.png', videoUrl: 'https://vimeo.com/1136777764?fl=tl&fe=ec' },
-    { id: 5, thumbnail: 'https://i.ibb.co/GQSycL9x/5.png', videoUrl: 'https://player.vimeo.com/video/1136230338' },
-    { id: 6, thumbnail: 'https://i.ibb.co/nqR5NMZZ/6.png', videoUrl: 'https://player.vimeo.com/video/1136231115' },
+    { id: 1, thumbnail: 'https://i.ibb.co/sdv4sS0S/1.png', videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4' },
+    { id: 2, thumbnail: 'https://i.ibb.co/d4FFTtZM/2.png', videoUrl: 'https://media.w3.org/2010/05/sintel/trailer.mp4' },
+    { id: 3, thumbnail: 'https://i.ibb.co/Kz8xnymd/3.png', videoUrl: 'https://media.w3.org/2010/05/bunny/trailer.mp4' },
+    { id: 4, thumbnail: 'https://i.ibb.co/4xwrCCJ/Screenshot-2025-11-14-at-10-54-41-AM.png', videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4' },
+    { id: 5, thumbnail: 'https://i.ibb.co/GQSycL9x/5.png', videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+    { id: 6, thumbnail: 'https://i.ibb.co/nqR5NMZZ/6.png', videoUrl: 'https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4' },
 ];
 
 export const featuredProjectImages = [
